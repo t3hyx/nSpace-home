@@ -5,6 +5,18 @@ export interface IColors {
   [key: string]: number
 }
 
+// * Three.js setup object
+export interface IThreeSetup {
+  scene: THREE.Scene
+  camera: THREE.PerspectiveCamera
+  renderer: THREE.WebGLRenderer
+  clock: THREE.Clock
+  animationFrameId: number | null
+  initThree: (container: HTMLElement) => void
+  handleResize: () => void
+  cleanupThree: () => void
+}
+
 // * Planets Structure
 export interface IPlanet {
   mesh: THREE.Mesh
