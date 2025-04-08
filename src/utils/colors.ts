@@ -1,5 +1,6 @@
 import type { IColors } from '../types/types'
 
 export const colorCollection: IColors = {
-  starWhite: 0xFFFFFF,
+  pureWhite: 0xFFFFFF,
+  pureBlack: 0x000000,
 }
