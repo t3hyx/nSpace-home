@@ -1,7 +1,12 @@
 import type * as THREE from 'three'
 
+// * Color Dictionary
+export interface IColors {
+  [key: string]: number
+}
+
 // * Planets Structure
-export interface Planet {
+export interface IPlanet {
   mesh: THREE.Mesh
   orbit: number
   orbitSpeed: number
@@ -11,7 +16,7 @@ export interface Planet {
 }
 
 // * Planet Building Options
-export interface PlanetOptions {
+export interface IPlanetOptions {
   name: string
   size: number
   orbit: number
@@ -20,7 +25,7 @@ export interface PlanetOptions {
 }
 
 // * Solar System Building Options
-export interface SolarSystemOptions {
+export interface ISolarSystemOptions {
   starsCount?: number
   sunSize?: number
   sunColor?: number
