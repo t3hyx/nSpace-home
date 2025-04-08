@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/no-multi-asterisks */
 import * as THREE from 'three'
-import { colorCollection } from "./colors"
+import { colorCollection } from './colors'
 
 /**
  * * Create stars for the background
@@ -39,13 +39,13 @@ export function createOrbitLine(radius: number): THREE.Line {
   const segments = 64
   const orbitGeometry = new THREE.BufferGeometry()
   const points = []
-  
+
   for (let i = 0; i <= segments; i++) {
     const theta = (i / segments) * Math.PI * 2
     points.push(new THREE.Vector3(
       radius * Math.cos(theta),
       0,
-      radius * Math.sin(theta)
+      radius * Math.sin(theta),
     ))
   }
 
@@ -54,7 +54,7 @@ export function createOrbitLine(radius: number): THREE.Line {
   const orbitMaterial = new THREE.LineBasicMaterial({
     color: colorCollection.starWhite,
     transparent: true,
-    opacity: 0.3
+    opacity: 0.3,
   })
 
   return new THREE.Line(orbitGeometry, orbitMaterial)
@@ -66,17 +66,22 @@ export function createOrbitLine(radius: number): THREE.Line {
  */
 export function disposeObject(object: THREE.Object3D): void {
   if (object instanceof THREE.Mesh) {
-    if (object.geometry) object.geometry.dispose()
+    if (object.geometry)
+      object.geometry.dispose()
     if (object.material) {
       // here we handle cases of multiple materials
       if (Array.isArray(object.material)) {
         object.material.forEach(material => material.dispose())
-      } else {
+      }
+      else {
         object.material.dispose()
       }
-    } else if (object instanceof THREE.Line) {
-      if (object.geometry) object.geometry.dispose()
-      if (object.material instanceof THREE.Material) object.material.dispose()
+    }
+    else if (object instanceof THREE.Line) {
+      if (object.geometry)
+        object.geometry.dispose()
+      if (object.material instanceof THREE.Material)
+        object.material.dispose()
     }
   }
 }
