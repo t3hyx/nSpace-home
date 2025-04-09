@@ -8,11 +8,13 @@ import { useThreeSetup } from './useThreeSetup'
 export function useSolarSystem(options: ISolarSystemOptions = {}) {
   const threeSetup = useThreeSetup()
 
+  if (!threeSetup.scene || threeSetup.clock) {
   // # Default Values
-  const defaultOptions = {
-    starsCount: 5000,
-    sunSize: 5,
-    sunColor: colors.sunOrange,
+    const defaultOptions = {
+      starsCount: 5000,
+      sunSize: 5,
+      sunColor: colors.sunOrange,
+    }
   }
   // # Merging Options
   const config = { ...defaultOptions, ...options }
@@ -23,6 +25,10 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
 
   // # Stars Building
   const setupStars = () => {
+    // ? DEBUG ---------------------------------
+    if (!threeSetup.scene) {
+      throw new Error('=== Unable to create stars: scene is not initialized ===')
+    }
     const stars = createStars(config.starsCount)
     threeSetup.scene.add(stars)
     return stars
@@ -35,7 +41,7 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
       color: config.sunColor,
     })
     sun.value = new THREE.Mesh(sunGeometry, sunMaterial)
-    threeSetup.scene.add(sun.value)
+    threeSetup.scene?.add(sun.value)
 
     // ** Lights
     const sunLight = new THREE.PointLight(colors.pureWhite, 2, 300) // ? color, intensity, distance

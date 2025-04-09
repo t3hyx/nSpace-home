@@ -21,25 +21,38 @@ onMounted(() => {
       try {
         console.warn('Threejs Init...')
         solarSystem.initThree(sceneContainer.value)
+        setTimeout(() => {
+          try {
+            console.warn('Scene initialized :', !!solarSystem.scene)
+            console.warn('Camera initialized : ', !!solarSystem.camera)
 
-        console.warn('Camera config...')
-        solarSystem.camera.position.set(0, 30, 80)
-        solarSystem.camera.lookAt(0, 0, 0)
-        solarSystem.camera.updateMatrixWorld()
-        solarSystem.camera.updateProjectionMatrix()
+            if (solarSystem.camera) {
+              console.warn('Camera config...')
+              solarSystem.camera.position.set(0, 30, 80)
+              solarSystem.camera.lookAt(0, 0, 0)
+              solarSystem.camera.updateMatrixWorld()
+              solarSystem.camera.updateProjectionMatrix()
+            } else {
+              console.error('Camera have not been correctly initialized !!')
+            }
 
-        console.warn('Solar System creation...')
-        solarSystem.setupSolarSystem()
+            console.warn('Solar System creation...')
+            solarSystem.setupSolarSystem()
 
-        console.warn('Animation starting...')
-        solarSystem.animate()
+            console.warn('Animation starting...')
+            solarSystem.animate()
+            
+          } catch (error) {
+            console.error('Error after init !! : ', error)
+          }
+        }, 50)
       }
       catch (error) {
-        console.error('Init Error!! : ', error)
+        console.error('Error during Init !! : ', error)
       }
     }
     else {
-      console.error('Scene container not available !!')
+      console.error('Scene container is not available !!')
     }
   }, 100)
 })
