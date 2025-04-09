@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 import { onBeforeUnmount, ref } from 'vue'
-import { colorCollection } from '../utils/colors'
+import { colors } from '../utils/colorsHelper'
 
 export function useThreeSetup() {
-  // * Three.js refs
+  // # Three.js Refs
   const scene = ref<THREE.Scene | null>(null)
   const camera = ref<THREE.PerspectiveCamera | null>(null)
   const renderer = ref<THREE.WebGLRenderer | null>(null)
@@ -11,7 +11,7 @@ export function useThreeSetup() {
   const container = ref<HTMLElement | null>(null)
   const animationFrameId = ref<number | null>(null)
 
-  // * Resizing Handler (callback)
+  // # Resizing Handler (callback)
   const handleResize = () => {
     if (!container.value || !camera.value || !renderer.value)
       return
@@ -24,7 +24,7 @@ export function useThreeSetup() {
     renderer.value.setSize(width, height)
   }
 
-  // * Three.js Init
+  // # Three.js Init
   const initThree = (containerElement: HTMLElement) => {
     container.value = containerElement
 
@@ -34,7 +34,7 @@ export function useThreeSetup() {
 
     // ** Scene
     scene.value = new THREE.Scene()
-    scene.value.background = new THREE.Color(colorCollection.pureBlack)
+    scene.value.background = new THREE.Color(colors.pureBlack)
 
     // ** Camera
     camera.value = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000) // ? (fov, aspectRatio, near, far)
@@ -54,7 +54,7 @@ export function useThreeSetup() {
     window.addEventListener('resize', handleResize)
   }
 
-  // * Clean-up (avoid memry leaks)
+  // # Clean-up (avoid memry leaks)
   const cleanupThree = () => {
     // Cancel animation
     if (animationFrameId.value) {
@@ -81,7 +81,7 @@ export function useThreeSetup() {
     container.value = null
   }
 
-  // * Cleaning Automation
+  // # Cleaning Automation
   onBeforeUnmount(() => {
     cleanupThree()
   })

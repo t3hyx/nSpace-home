@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/no-multi-asterisks */
 import * as THREE from 'three'
-import { colorCollection } from './colors'
+import { colors } from './colorsHelper'
 
 /**
  * * Create stars for the background
@@ -11,7 +11,7 @@ import { colorCollection } from './colors'
 export function createStars(count = 5000, spread = 1000): THREE.Points {
   const starsGeometry = new THREE.BufferGeometry()
   const starsMaterial = new THREE.PointsMaterial({
-    color: colorCollection.starWhite,
+    color: colors.starWhite,
     size: 0.7,
     sizeAttenuation: true,
   })
@@ -52,7 +52,7 @@ export function createOrbitLine(radius: number): THREE.Line {
   orbitGeometry.setFromPoints(points)
 
   const orbitMaterial = new THREE.LineBasicMaterial({
-    color: colorCollection.starWhite,
+    color: colors.starWhite,
     transparent: true,
     opacity: 0.3,
   })
