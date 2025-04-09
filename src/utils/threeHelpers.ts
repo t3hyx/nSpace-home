@@ -11,7 +11,7 @@ import { colors } from './colorsHelper'
 export function createStars(count = 5000, spread = 1000): THREE.Points {
   const starsGeometry = new THREE.BufferGeometry()
   const starsMaterial = new THREE.PointsMaterial({
-    color: colors.starWhite,
+    color: colors.pureWhite,
     size: 0.7,
     sizeAttenuation: true,
   })
@@ -52,7 +52,7 @@ export function createOrbitLine(radius: number): THREE.Line {
   orbitGeometry.setFromPoints(points)
 
   const orbitMaterial = new THREE.LineBasicMaterial({
-    color: colors.starWhite,
+    color: colors.pureWhite,
     transparent: true,
     opacity: 0.3,
   })

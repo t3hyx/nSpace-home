@@ -38,7 +38,7 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
     threeSetup.scene.add(sun.value)
 
     // ** Lights
-    const sunLight = new THREE.PointLight(colors.starWhite, 2, 300) // ? color, intensity, distance
+    const sunLight = new THREE.PointLight(colors.pureWhite, 2, 300) // ? color, intensity, distance
     const ambientLight = new THREE.AmbientLight(colors.graphiteGrey, 0.7) // ? color, intensity
     sun.value.add(sunLight)
     threeSetup.scene.add(ambientLight)
@@ -54,7 +54,7 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
     const planetGeometry = new THREE.SphereGeometry(size, 24, 24)
     const planetMaterial = new THREE.MeshLambertMaterial({
       color,
-      emissive: colors.pureBlack
+      emissive: colors.pureBlack,
     })
     const mesh = new THREE.Mesh(planetGeometry, planetMaterial)
 
@@ -75,7 +75,7 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
       orbitSpeed,
       angle,
       name,
-      orbitLine
+      orbitLine,
     }
   }
 
@@ -90,40 +90,62 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
       { name: 'Mercury', size: 1.2, orbit: 12, color: colors.mercuryBlue, orbitSpeed: 0.5 },
       { name: 'Venus', size: 1.5, orbit: 19, color: colors.venusOrange, orbitSpeed: 0.25 },
       { name: 'Earth', size: 1.8, orbit: 26, color: colors.earthGreen, orbitSpeed: 0.167 },
-      { name: 'Mars', size: 2.1, orbit: 33, color: colors.marsRed, orbitSpeed: 0.125},
-      { name: 'Jupiter', size: 2.0, orbit: 40, color: colors.jupiterYellow, orbitSpeed: 0.1},
-      { name: 'Saturn', size: 2.4, orbit: 47, color: colors.saturnPurple, orbitSpeed: 0.083},
-      { name: 'Uranus', size: 2.8, orbit: 54, color: colors.uranusTeal, orbitSpeed: 0.071},
-      { name: 'Neptune', size: 3.2, orbit: 61, color: colors.neptuneBlue, orbitSpeed: 0.063},
+      { name: 'Mars', size: 2.1, orbit: 33, color: colors.marsRed, orbitSpeed: 0.125 },
+      { name: 'Jupiter', size: 2.0, orbit: 40, color: colors.jupiterYellow, orbitSpeed: 0.1 },
+      { name: 'Saturn', size: 2.4, orbit: 47, color: colors.saturnPurple, orbitSpeed: 0.083 },
+      { name: 'Uranus', size: 2.8, orbit: 54, color: colors.uranusTeal, orbitSpeed: 0.071 },
+      { name: 'Neptune', size: 3.2, orbit: 61, color: colors.neptuneBlue, orbitSpeed: 0.063 },
     ]
     planets.value = planetData.map(options => createPlanet(options))
   }
 
   // # Solar System Animation
   const animateSolarSystem = () => {
-    if (!sun.value)
+    // ? DEBUG ------------------------------------------------------
+    try {
+      if (!sun.value)
+        console.error('Sun is not initialized into animation !!')
       return
-    // ** Get elapsed time
-    const delta = threeSetup.clock.getDelta()
+      // ** Get elapsed time
+      const delta = threeSetup.clock.getDelta()
 
-    // ** Sun rotation
-    sun.value.rotation.y += 0.5 * delta
+      // ** Sun rotation
+      sun.value.rotation.y += 0.5 * delta
 
-    // ** Planets animation
-    planets.value.forEach(planet => {
-      planet.angle += planet.orbitSpeed * delta // ? update angle according to speed
-      planet.mesh.position.x = Math.cos(planet.angle) * planet.orbit // ? calculate new position
-      planet.mesh.position.z = Math.sin(planet.angle) * planet.orbit
-      planet.mesh.rotation.y += delta
-    })
+      // ** Planets animation
+      planets.value.forEach((planet) => {
+        // ? DEBUG -------------------------------------
+        try {
+          planet.angle += planet.orbitSpeed * delta // ? update angle according to speed
+          planet.mesh.position.x = Math.cos(planet.angle) * planet.orbit // ? calculate new position
+          planet.mesh.position.z = Math.sin(planet.angle) * planet.orbit
+          planet.mesh.rotation.y += delta
+        }
+        catch (error) {
+          console.error(`Planet : [${planet.name}] animation error !! :`, error)
+        }
+      })
+    }
+    catch (error) {
+      console.error('Solar System Animation Error !! : ', error)
+    }
   }
 
   // # Animation Loop
   const animate = () => {
     animateSolarSystem()
-
-    // Render
-    threeSetup.renderer.render(threeSetup.scene, threeSetup.camera)
+    // ? DEBUG ---------------------------------------------------------
+    if (threeSetup.scene && threeSetup.camera && threeSetup.renderer) {
+      try {
+        // Render
+        threeSetup.renderer.render(threeSetup.scene, threeSetup.camera)
+      }
+      catch (error) {
+        console.error('Erreur lors du rendu:', error)
+        threeSetup.camera.updateProjectionMatrix()
+        threeSetup.camera.updateMatrixWorld()
+      }
+    }
 
     // Resume Animation Loop
     threeSetup.animationFrameId = requestAnimationFrame(animate)
@@ -132,11 +154,13 @@ export function useSolarSystem(options: ISolarSystemOptions = {}) {
   // # Solar System Cleanup
   const cleanupSolarSystem = () => {
     // ** Cleaning planets
-    planets.value.forEach(planet => {
+    planets.value.forEach((planet) => {
       disposeObject(planet.mesh)
-      if (planet.orbitLine) disposeObject(planet.orbitLine)
+      if (planet.orbitLine)
+        disposeObject(planet.orbitLine)
       threeSetup.scene.remove(planet.mesh)
-      if (planet.orbitLine) threeSetup.scene.remove(planet.orbitLine)
+      if (planet.orbitLine)
+        threeSetup.scene.remove(planet.orbitLine)
     })
 
     // ** Cleaning sun
